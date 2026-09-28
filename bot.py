@@ -1,4 +1,5 @@
 import os
+import asyncio
 import threading
 from flask import Flask
 from telegram.ext import ApplicationBuilder, CommandHandler
@@ -17,6 +18,10 @@ async def start(update, context):
     )
 
 def run_bot():
+    # Fix for Render threading error
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    
     app = ApplicationBuilder().token(TOKEN).build()
     app.add_handler(CommandHandler("start", start))
     app.run_polling()
